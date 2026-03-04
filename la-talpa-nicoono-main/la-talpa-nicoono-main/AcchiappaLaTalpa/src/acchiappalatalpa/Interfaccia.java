@@ -18,6 +18,10 @@ import java.util.ArrayList;
 public class Interfaccia extends javax.swing.JFrame {
     private ArrayList<RoundButton> listaBuche = new ArrayList<>();
     private Gestore gestore;
+    private Giocatore giocatore;
+    
+    private final Color coloreTalpa = new Color(139, 69, 19); // Questo crea il Marrone
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Interfaccia.class.getName());
 
     /**
@@ -25,9 +29,14 @@ public class Interfaccia extends javax.swing.JFrame {
      */
     
    public Interfaccia() {
-        // Setup base
+initComponents(); // Inizializza la label creata con la palette
+        
+        // Creiamo il giocatore passandogli la label della palette
+        giocatore = new Giocatore(lbl_punteggio);
+
+        // Setup finestra
         setTitle("Acchiappa la Talpa");
-        setSize(450, 500);
+        setSize(450, 550); // Aumentato un po' per sicurezza
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
@@ -35,29 +44,50 @@ public class Interfaccia extends javax.swing.JFrame {
         int buttonSize = 100;
         int gap = 20;
         int startX = 50;
-        int startY = 50;
+        int startY = 80; // Inizia sotto la label del punteggio
 
-        // Ciclo per creare e AGGIUNGERE le buche
+        // Ciclo per creare, posizionare e AGGIUNGERE le buche
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 RoundButton hole = new RoundButton("");
                 hole.setBackground(Color.lightGray);
+                
+                // CALCOLO POSIZIONE (Mancava questo!)
                 int x = startX + col * (buttonSize + gap);
                 int y = startY + row * (buttonSize + gap);
-                hole.setBounds(x, y, buttonSize, buttonSize);
                 
-                // IMPORTANTE: Aggiungi alla lista prima di passare al gestore
-                listaBuche.add(hole); 
+                // ASSEGNAZIONE DIMENSIONE E POSIZIONE (Mancava questo!)
+                hole.setBounds(x, y, buttonSize, buttonSize);
+
+                hole.addActionListener(e -> {
+                    if (hole.getBackground().equals(coloreTalpa)) {
+                        giocatore.incrementaPunteggio();
+                        hole.setBackground(Color.lightGray);
+                    }
+                });
+                hole.addActionListener(e -> {
+                    // Se è marrone (Talpa), aumento
+                    if (hole.getBackground().equals(coloreTalpa)) {
+                        giocatore.incrementaPunteggio();
+                        hole.setBackground(Color.lightGray); // La talpa sparisce subito
+                    } 
+                    // Se NON è marrone (Buca vuota), diminuisco
+                    else {
+                        giocatore.decrementaPunteggio();
+                    }
+                });
+                
+                
+                listaBuche.add(hole);
                 getContentPane().add(hole);
             }
         }
         
-       // 2. AVVIO DEL CICLO INFINITO
-        // Creiamo il gestore passandogli le buche appena create
+        // Avvio del gioco
         gestore = new Gestore(listaBuche);
-        
-        // Facciamo partire il thread del gestore che gestirà il ciclo infinito
         gestore.start();
+        
+        
     }
 
     /**
@@ -69,17 +99,27 @@ public class Interfaccia extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lbl_punteggio = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        lbl_punteggio.setText("PUNTEGGIO");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(110, 110, 110)
+                .addComponent(lbl_punteggio, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(173, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbl_punteggio)
+                .addContainerGap(278, Short.MAX_VALUE))
         );
 
         pack();
@@ -111,5 +151,6 @@ public class Interfaccia extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel lbl_punteggio;
     // End of variables declaration//GEN-END:variables
 }
