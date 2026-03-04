@@ -12,10 +12,12 @@ import java.awt.Color;
 import javax.swing.*;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 
 public class Interfaccia extends javax.swing.JFrame {
-    
+    private ArrayList<RoundButton> listaBuche = new ArrayList<>();
+    private Gestore gestore;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Interfaccia.class.getName());
 
     /**
@@ -23,19 +25,19 @@ public class Interfaccia extends javax.swing.JFrame {
      */
     
    public Interfaccia() {
+        // Setup base
         setTitle("Acchiappa la Talpa");
-        setSize(400, 400);
+        setSize(450, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // centra la finestra
+        setLocationRelativeTo(null);
+        getContentPane().setLayout(null);
 
-        getContentPane().setLayout(null); // disattiva GroupLayout
+        int buttonSize = 100;
+        int gap = 20;
+        int startX = 50;
+        int startY = 50;
 
-        int buttonSize = 100; // larghezza e altezza della buca
-        int gap = 20;         // distanza tra le buche
-        int startX = 50;      // posizione iniziale X
-        int startY = 50;      // posizione iniziale Y
-
-        // crea 9 buche (3x3)
+        // Ciclo per creare e AGGIUNGERE le buche
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 RoundButton hole = new RoundButton("");
@@ -43,9 +45,19 @@ public class Interfaccia extends javax.swing.JFrame {
                 int x = startX + col * (buttonSize + gap);
                 int y = startY + row * (buttonSize + gap);
                 hole.setBounds(x, y, buttonSize, buttonSize);
+                
+                // IMPORTANTE: Aggiungi alla lista prima di passare al gestore
+                listaBuche.add(hole); 
                 getContentPane().add(hole);
             }
         }
+        
+       // 2. AVVIO DEL CICLO INFINITO
+        // Creiamo il gestore passandogli le buche appena create
+        gestore = new Gestore(listaBuche);
+        
+        // Facciamo partire il thread del gestore che gestirà il ciclo infinito
+        gestore.start();
     }
 
     /**

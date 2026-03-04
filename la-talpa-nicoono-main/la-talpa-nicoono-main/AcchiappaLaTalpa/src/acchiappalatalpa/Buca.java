@@ -8,7 +8,7 @@ package acchiappalatalpa;
  *
  * @author onorati.nicolo
  */
-public class Gestore {
-    
+public class Buca {
+
     
 }
