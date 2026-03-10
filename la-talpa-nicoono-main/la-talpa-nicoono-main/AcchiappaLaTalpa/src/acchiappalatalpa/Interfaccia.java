@@ -29,65 +29,51 @@ public class Interfaccia extends javax.swing.JFrame {
      */
     
    public Interfaccia() {
-initComponents(); // Inizializza la label creata con la palette
-        
-        // Creiamo il giocatore passandogli la label della palette
-        giocatore = new Giocatore(lbl_punteggio);
+        initComponents(); // Inizializza lbl_punteggio e lblTimer dalla palette
+    
+    // Inizializziamo il giocatore UNA sola volta
+    giocatore = new Giocatore(lbl_punteggio);
 
-        // Setup finestra
-        setTitle("Acchiappa la Talpa");
-        setSize(450, 550); // Aumentato un po' per sicurezza
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        getContentPane().setLayout(null);
+    // Setup finestra
+    setTitle("Acchiappa la Talpa");
+    setSize(450, 600); 
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLocationRelativeTo(null);
+    getContentPane().setLayout(null);
 
-        int buttonSize = 100;
-        int gap = 20;
-        int startX = 50;
-        int startY = 80; // Inizia sotto la label del punteggio
+    int buttonSize = 100;
+    int gap = 20;
+    int startX = 50;
+    int startY = 100; 
 
-        // Ciclo per creare, posizionare e AGGIUNGERE le buche
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                RoundButton hole = new RoundButton("");
-                hole.setBackground(Color.lightGray);
-                
-                // CALCOLO POSIZIONE (Mancava questo!)
-                int x = startX + col * (buttonSize + gap);
-                int y = startY + row * (buttonSize + gap);
-                
-                // ASSEGNAZIONE DIMENSIONE E POSIZIONE (Mancava questo!)
-                hole.setBounds(x, y, buttonSize, buttonSize);
+    // Ciclo per creare le buche
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+            RoundButton hole = new RoundButton("");
+            hole.setBackground(Color.lightGray);
+            
+            int x = startX + col * (buttonSize + gap);
+            int y = startY + row * (buttonSize + gap);
+            hole.setBounds(x, y, buttonSize, buttonSize);
 
-                hole.addActionListener(e -> {
-                    if (hole.getBackground().equals(coloreTalpa)) {
-                        giocatore.incrementaPunteggio();
-                        hole.setBackground(Color.lightGray);
-                    }
-                });
-                hole.addActionListener(e -> {
-                    // Se è marrone (Talpa), aumento
-                    if (hole.getBackground().equals(coloreTalpa)) {
-                        giocatore.incrementaPunteggio();
-                        hole.setBackground(Color.lightGray); // La talpa sparisce subito
-                    } 
-                    // Se NON è marrone (Buca vuota), diminuisco
-                    else {
-                        giocatore.decrementaPunteggio();
-                    }
-                });
-                
-                
-                listaBuche.add(hole);
-                getContentPane().add(hole);
-            }
+            // UN SOLO ActionListener che gestisce tutto
+            hole.addActionListener(e -> {
+                if (hole.getBackground().equals(coloreTalpa)) {
+                    giocatore.incrementaPunteggio();
+                    hole.setBackground(Color.lightGray); // La talpa sparisce se colpita
+                } else {
+                    giocatore.decrementaPunteggio(); // Errore: clic sulla buca vuota
+                }
+            });
+            
+            listaBuche.add(hole);
+            getContentPane().add(hole);
         }
-        
-        // Avvio del gioco
-        gestore = new Gestore(listaBuche);
-        gestore.start();
-        
-        
+    }
+    
+    // AVVIO DEL GIOCO: Usiamo 'lblTimer' perché è così che si chiama nel tuo initComponents
+    gestore = new Gestore(listaBuche, lblTimer, giocatore);
+    gestore.start();
     }
 
     /**
@@ -100,25 +86,32 @@ initComponents(); // Inizializza la label creata con la palette
     private void initComponents() {
 
         lbl_punteggio = new javax.swing.JLabel();
+        lblTimer = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lbl_punteggio.setText("PUNTEGGIO");
+
+        lblTimer.setText("TEMPO");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(110, 110, 110)
+                .addGap(36, 36, 36)
                 .addComponent(lbl_punteggio, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(173, Short.MAX_VALUE))
+                .addGap(92, 92, 92)
+                .addComponent(lblTimer, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbl_punteggio)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_punteggio)
+                    .addComponent(lblTimer))
                 .addContainerGap(278, Short.MAX_VALUE))
         );
 
@@ -151,6 +144,7 @@ initComponents(); // Inizializza la label creata con la palette
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel lblTimer;
     private javax.swing.JLabel lbl_punteggio;
     // End of variables declaration//GEN-END:variables
 }

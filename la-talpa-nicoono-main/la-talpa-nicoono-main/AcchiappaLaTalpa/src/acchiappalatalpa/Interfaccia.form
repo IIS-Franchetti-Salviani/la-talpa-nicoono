@@ -24,9 +24,11 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="110" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
               <Component id="lbl_punteggio" min="-2" pref="117" max="-2" attributes="0"/>
-              <EmptySpace pref="173" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
+              <Component id="lblTimer" min="-2" pref="81" max="-2" attributes="0"/>
+              <EmptySpace pref="74" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -34,7 +36,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="lbl_punteggio" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lbl_punteggio" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTimer" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace pref="278" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -44,6 +49,11 @@
     <Component class="javax.swing.JLabel" name="lbl_punteggio">
       <Properties>
         <Property name="text" type="java.lang.String" value="PUNTEGGIO"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTimer">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="TEMPO"/>
       </Properties>
     </Component>
   </SubComponents>
